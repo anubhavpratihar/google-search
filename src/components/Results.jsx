@@ -10,13 +10,21 @@ export const Results = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (searchTerm !== "") {
-      if (location.pathname === "/videos") {
-        getResults(`/search?q=${searchTerm}&tbm=vid`);
-      } else {
-        getResults(`/search?q=${searchTerm}&tbm=isch`);
+    const fetchData = async () => {
+      if (searchTerm !== "") {
+        try {
+          if (location.pathname === "/videos") {
+            await getResults(`/search?q=${searchTerm}&tbm=vid`);
+          } else {
+            await getResults(`/search?q=${searchTerm}&tbm=isch`);
+          }
+        } catch (error) {
+          console.log("Error fetching results:", error);
+        }
       }
-    }
+    };
+
+    fetchData();
   }, [searchTerm, location.pathname, getResults]);
 
   if (loading) return <Loading />;
@@ -89,11 +97,11 @@ export const Results = () => {
       return (
         <div className="flex flex-wrap">
           {results?.map((video, index) => (
-            <div key={index} className="p-2">
+            <div key={index} className="sm:w-1/2 w-full md:p-4 p-2">
               <ReactPlayer
                 url={video.additional_links?.[0].href}
                 controls
-                width="355px"
+                width="100%"
                 height="200px"
               />
               <a
