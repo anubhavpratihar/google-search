@@ -12,12 +12,12 @@ export const Results = () => {
   useEffect(() => {
     if (searchTerm !== "") {
       if (location.pathname === "/videos") {
-        getResults(`/search/q=${searchTerm} videos`);
+        getResults(`/search?q=${searchTerm}&tbm=vid`);
       } else {
-        getResults(`${location.pathname}/q=${searchTerm}&num=40`);
+        getResults(`/search?q=${searchTerm}&tbm=isch`);
       }
     }
-  }, [searchTerm, location.pathname, getResults]); // Include 'getResults' in the dependency array
+  }, [searchTerm, location.pathname, getResults]);
 
   if (loading) return <Loading />;
 
@@ -25,7 +25,7 @@ export const Results = () => {
     case "/search":
       return (
         <div className="sm:px-56 flex flex-wrap justify-between space-y-6">
-          {results?.results?.map(({ link, title }, index) => (
+          {results?.map(({ link, title }, index) => (
             <div key={index} className="md:w-2/5 w-full">
               <a href={link} target="_blank" rel="noreferrer">
                 <p className="text-sm">
@@ -42,26 +42,24 @@ export const Results = () => {
     case "/images":
       return (
         <div className="flex flex-wrap justify-center items-center">
-          {results?.image_results?.map(
-            ({ image, link: { href, title } }, index) => (
-              <a
-                href={href}
-                target="_blank"
-                key={index}
-                rel="noreferrer"
-                className="sm:p-3 p-5"
-              >
-                <img src={image?.src} alt={title} loading="lazy" />
-                <p className="sm:w-36 w-36 break-words text-sm mt-2">{title}</p>
-              </a>
-            )
-          )}
+          {results?.map(({ image, link: { href, title } }, index) => (
+            <a
+              href={href}
+              target="_blank"
+              key={index}
+              rel="noreferrer"
+              className="sm:p-3 p-5"
+            >
+              <img src={image?.src} alt={title} loading="lazy" />
+              <p className="sm:w-36 w-36 break-words text-sm mt-2">{title}</p>
+            </a>
+          ))}
         </div>
       );
     case "/news":
       return (
         <div className="sm:px-56 flex flex-wrap justify-between items-center space-y-6">
-          {results?.entries?.map(({ id, links, source, title }) => (
+          {results?.map(({ id, links, source, title }) => (
             <div key={id} className="md:w-2/5 w-full">
               <a
                 href={links?.[0].href}
@@ -90,7 +88,7 @@ export const Results = () => {
     case "/videos":
       return (
         <div className="flex flex-wrap">
-          {results?.results?.map((video, index) => (
+          {results?.map((video, index) => (
             <div key={index} className="p-2">
               <ReactPlayer
                 url={video.additional_links?.[0].href}
