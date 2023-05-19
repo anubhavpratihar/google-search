@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import ReactPlayer from "react-player"; // Import ReactPlayer
+import ReactPlayer from "react-player";
 
 import { useStateContext } from "../contexts/StateContextProvider";
 import { Loading } from "./Loading";
@@ -17,7 +17,7 @@ export const Results = () => {
         getResults(`${location.pathname}/q=${searchTerm}&num=40`);
       }
     }
-  }, [searchTerm, location.pathname]);
+  }, [searchTerm, location.pathname, getResults]); // Include 'getResults' in the dependency array
 
   if (loading) return <Loading />;
 
@@ -98,11 +98,20 @@ export const Results = () => {
                 width="355px"
                 height="200px"
               />
+              <a
+                href={video.additional_links?.[0].href}
+                target="_blank"
+                rel="noreferrer"
+                className="text-lg hover:underline mt-1 block"
+              >
+                {video.title}
+              </a>
+              <p>{video?.description}</p>
             </div>
           ))}
         </div>
       );
     default:
-      return "Error...";
+      return null;
   }
 };
